@@ -71,7 +71,7 @@ filelocation=input()
 big_img=cv2.imread(filelocation,1)
 H,W =big_img.shape[:2]
 
-H1 , W1= (1050,int(1050*H/W)) 
+H1 , W1= (H,W) 
 
 bigimage=cv2.resize(big_img,(H1,W1))
 blankimage=np.zeros(bigimage.shape[:3], dtype=np.uint8)
@@ -79,7 +79,7 @@ print(blankimage.shape[2])
 
 
 #small image
-smallimages=load_images_from_folder(os.path.join(folder,'flowers'))
+smallimages=load_images_from_folder(folder)
 smallimages2 =[]
 h,w=smallimages[1].shape[:2]
 singlearea = H1*W1/len(smallimages)

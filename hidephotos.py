@@ -71,7 +71,7 @@ filelocation=input()
 big_img=cv2.imread(filelocation,1)
 H,W =big_img.shape[:2]
 
-H1 , W1= (H,W) 
+H1 , W1= (W,H) 
 
 bigimage=cv2.resize(big_img,(H1,W1))
 blankimage=np.zeros(bigimage.shape[:3], dtype=np.uint8)
@@ -131,7 +131,7 @@ for ix in range(0,H1,h1):
         
         if bigimage[iy:iy+h1 , ix:ix+w1].shape[0:2]==(h1,w1):
             
-                blankimage[iy:iy+w1 , ix:ix+h1]=cv2.addWeighted(smallimages2[points[counter]],0.5,bigimage[iy:iy+w1 , ix:ix+h1],0.4,0)    
+                blankimage[iy:iy+w1 , ix:ix+h1]=cv2.addWeighted(smallimages2[points[counter]],0.3,bigimage[iy:iy+w1 , ix:ix+h1],0.6,0)    
         counter+=1  
          
 

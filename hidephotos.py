@@ -2,7 +2,7 @@ import numpy as np
 import cv2 
 import os
 import math
-
+from scipy.spatial import KDTree
 #distance funtion
 def difdistance(a1,a2,b1,b2,c1,c2):
     a=abs(a1-a2)
@@ -84,7 +84,7 @@ singlearea = H1*W1/len(smallimages)
 h1=int(math.sqrt(singlearea*h/w))
 w1=int(h1*h/w)
 avg_colors=[]
-i=0
+
 #resize
 for im in smallimages:
     smallimages2.append(cv2.resize(im,(h1,w1)))
@@ -92,8 +92,8 @@ for im in smallimages:
 
     avg_color_per_row =np.average(im, axis=0)
     avg=list(np.array(np.average(avg_color_per_row, axis=0),dtype=np.uint32))
-    avg=avg+[i]
-    i+=1
+    
+    
     avg_colors.append(avg)
 #test
 test =0
@@ -105,21 +105,34 @@ print(test)
 #avg_colors.sort(key= lambda bgr: bgr[0]*bgr[0]+ bgr[1]*bgr[1]+ bgr[2]*bgr[2])
 
 print(h1,w1)
-
+avg_colors2=[]
 #combining image
 for ix in range(0,H1,h1):
     for iy in range(0,W1,w1):
-        img3=cv2.resize(bigimage[iy:iy+w1 , ix:ix+h1],(h1,w1))
-        index=mindistance(avg_colors,bigimage[iy+w1//2][ix+h1//2])
-        print(h1,w1)
+        
+        
+        avg_color_per_row =np.average(bigimage[iy:iy+w1 , ix:ix+h1], axis=0)
+        avg=list(np.array(np.average(avg_color_per_row, axis=0),dtype=np.uint32))
+        avg_colors2.append(avg)
         
         #blankimage[iy:iy+w1 , ix:ix+h1]=
-        if bigimage[iy:iy+h1 , ix:ix+w1].shape[0:2]==(h1,w1):
-            #cv2.addWeighted(img1, wt1, img2, wt2, gammaValue)
-            print('hello')
-            blankimage[iy:iy+w1 , ix:ix+h1]=cv2.addWeighted(smallimages2[index],0.7,bigimage[iy:iy+w1 , ix:ix+h1],0.2,0)
-            
+kdtree=KDTree(avg_colors) 
+ist,points=kdtree.query(avg_colors2,1)
+print(avg_colors[0][:])    
+print(avg_colors2[0][:])   
+print(points)  
+counter=0        
+for ix in range(0,H1,h1):
+    for iy in range(0,W1,w1):
         
+        
+        
+        
+        if bigimage[iy:iy+h1 , ix:ix+w1].shape[0:2]==(h1,w1):
+            
+            
+            blankimage[iy:iy+w1 , ix:ix+h1]=cv2.addWeighted(smallimages2[points[counter]],0.5,bigimage[iy:iy+w1 , ix:ix+h1],0.4,0)    
+        counter+=1  
          
 
 
